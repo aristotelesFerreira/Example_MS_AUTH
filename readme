@@ -2,3 +2,9 @@ Outros MS:
 
 EXAMPLE_MS_ORDERS: https://github.com/aristotelesFerreira/Example_MS_ORDERS
 EXAMPLE_MS_PRODUCTS: https://github.com/aristotelesFerreira/Example_MS_PRODUCTS
+
+#
+Esse repositório também contém um exemplo de publicação de tópico SNS (AWS): 
+https://github.com/aristotelesFerreira/Example_MS_AUTH/blob/master/src/helpers/snsAWS.ts
+
+Basta alterar o ARN do seu Tópico e ouvi-lo em outros MS.
