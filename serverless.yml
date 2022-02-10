@@ -1,0 +1,64 @@
+service: ms-authV1
+disabledDeprecations:
+  - CODE_1 # To disable specific deprecation with code "CODE_1"
+  - "*" # To disable all deprecation messages
+frameworkVersion: "3.1.1"
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: "20201221"
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_USER: ${env:DB_USER}
+    DB_PORT: ${env:DB_PORT}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+    DB_NAME: ${env:DB_NAME}
+    KEY: ${env:KEY}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - sns:Publish
+            - sns:Subscribe
+          Resource: "arn:aws:sns:us-east-1:*:*"
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+custom:
+  funcDir: src/functions
+  baseApi: v1
+  serverless-offline:
+    httpPort: 3002
+    lambdaPort: 3003
+  webpack:
+    webpackConfig: "webpack.config.js"
+    includeModules:
+      forceInclude:
+        - pg
+        - pg-hstore
+        - mysql
+        - mysql2
+      forceExclude:
+        - aws-sdk
+functions:
+  createUser:
+    handler: ${self:custom.funcDir}/user/create.handler
+    events:
+      - http:
+          path: ${self:custom.baseApi}/users
+          method: post
+
+  authUser:
+    handler: ${self:custom.funcDir}/user/auth.handler
+    events:
+      - http:
+          path: ${self:custom.baseApi}/auth
+          method: post
+  verifyToken:
+    handler: ${self:custom.funcDir}/user/verifyAuth.handler
